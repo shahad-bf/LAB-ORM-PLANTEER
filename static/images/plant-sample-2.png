@@ -1,0 +1,6 @@
+<!-- Placeholder for plant-sample-2.png -->
+<svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="200" height="120" fill="#f1f8e9"/>
+<circle cx="100" cy="60" r="30" fill="#2d5016"/>
+<text x="100" y="65" text-anchor="middle" fill="white" font-size="12">Plant 2</text>
+</svg>

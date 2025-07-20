@@ -1,0 +1,143 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - Planteer{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="page-title">Contact Us</h1>
+            <p class="text-muted">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Contact Form -->
+        <div class="col-lg-8">
+            <div class="plant-card">
+                <div class="plant-info">
+                    <h3 class="fw-bold mb-4" style="color: #2d5016;">
+                        <i class="fas fa-envelope"></i> Send us a Message
+                    </h3>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <!-- Name -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Full Name *</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger small mt-1">{{ form.name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Email Address *</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Subject -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Subject *</label>
+                                {{ form.subject }}
+                                {% if form.subject.errors %}
+                                    <div class="text-danger small mt-1">{{ form.subject.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Message -->
+                            <div class="col-12 mb-4">
+                                <label class="form-label fw-bold">Your Message *</label>
+                                {{ form.message }}
+                                <div class="form-text">Please provide as much detail as possible. We'll get back to you soon!</div>
+                                {% if form.message.errors %}
+                                    <div class="text-danger small mt-1">{{ form.message.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Info & Image -->
+        <div class="col-lg-4">
+            <!-- Contact Image -->
+            <div class="plant-card mb-4">
+                <img src="{% static 'images/contact_image.png' %}" alt="Contact Us" class="img-fluid" style="width: 100%; height: 200px; object-fit: cover; border-radius: 15px 15px 0 0;">
+                <div class="plant-info">
+                    <h5 class="fw-bold mb-2" style="color: #2d5016;">Get in Touch</h5>
+                    <p class="plant-description">We're here to help you with any questions about plants, gardening, or our services.</p>
+                </div>
+            </div>
+            
+            <!-- Contact Info Card -->
+            <div class="plant-card">
+                <div class="plant-info">
+                    <h5 class="fw-bold mb-3" style="color: #2d5016;">
+                        <i class="fas fa-info-circle"></i> Contact Information
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <h6 class="fw-bold"><i class="fas fa-clock me-2"></i>Response Time</h6>
+                        <p class="small text-muted mb-0">We'll respond to your message within 24-48 hours</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6 class="fw-bold"><i class="fas fa-language me-2"></i>Languages</h6>
+                        <p class="small text-muted mb-0">English and Arabic supported</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6 class="fw-bold"><i class="fas fa-question-circle me-2"></i>What can we help with?</h6>
+                        <ul class="small text-muted mb-0">
+                            <li>Plant care questions</li>
+                            <li>Website improvement suggestions</li>
+                            <li>Technical issues</li>
+                            <li>New plant requests</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="mt-4">
+                        <h6 class="fw-bold mb-3">Quick Links</h6>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'plants:all_plants' %}" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-seedling"></i> Browse Plants
+                            </a>
+                            <a href="{% url 'plants:search_plants' %}" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-search"></i> Advanced Search
+                            </a>
+                            <a href="{% url 'plants:add_plant' %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-plus"></i> Add Plant
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+</style>
+{% endblock %}

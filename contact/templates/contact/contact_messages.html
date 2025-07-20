@@ -1,0 +1,156 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}رسائل المستخدمين - Planteer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-success">
+                    <i class="fas fa-envelope"></i> رسائل المستخدمين
+                    <span class="badge bg-success">{{ messages.count }}</span>
+                </h1>
+                <a href="{% url 'contact:contact_us' %}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> إرسال رسالة جديدة
+                </a>
+            </div>
+            
+            {% if messages %}
+                <div class="row">
+                    {% for message in messages %}
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100 {% if not message.is_read %}border-warning{% endif %}">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0 text-success">
+                                        <i class="fas fa-user"></i> {{ message.name }}
+                                        {% if not message.is_read %}
+                                            <span class="badge bg-warning text-dark">جديد</span>
+                                        {% endif %}
+                                    </h6>
+                                    <small class="text-muted">{{ message.email }}</small>
+                                </div>
+                                <small class="text-muted">{{ message.created_at|date:"d M Y - H:i" }}</small>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title text-primary">
+                                    <i class="fas fa-tag"></i> {{ message.subject }}
+                                </h6>
+                                <p class="card-text">{{ message.message|truncatewords:30 }}</p>
+                                
+                                {% if message.message|length > 150 %}
+                                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#message-{{ message.id }}">
+                                        <i class="fas fa-eye"></i> عرض الرسالة كاملة
+                                    </button>
+                                    
+                                    <div class="collapse mt-3" id="message-{{ message.id }}">
+                                        <div class="bg-light p-3 rounded">
+                                            <strong>الرسالة كاملة:</strong>
+                                            <p class="mt-2 mb-0">{{ message.message }}</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        {% if message.is_read %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> مقروءة
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-envelope"></i> غير مقروءة
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <a href="mailto:{{ message.email }}?subject=Re: {{ message.subject }}" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-reply"></i> رد
+                                        </a>
+                                        {% if not message.is_read %}
+                                            <button class="btn btn-outline-warning btn-sm">
+                                                <i class="fas fa-check"></i> تحديد كمقروءة
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Statistics -->
+                <div class="row mt-5">
+                    <div class="col-md-4">
+                        <div class="card text-center border-success">
+                            <div class="card-body">
+                                <h3 class="text-success">{{ messages.count }}</h3>
+                                <p class="mb-0">إجمالي الرسائل</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center border-warning">
+                            <div class="card-body">
+                                <h3 class="text-warning">{{ messages|length }}</h3>
+                                <p class="mb-0">رسائل جديدة</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center border-info">
+                            <div class="card-body">
+                                <h3 class="text-info">
+                                    {% widthratio messages|length messages.count 100 %}%
+                                </h3>
+                                <p class="mb-0">معدل الرسائل الجديدة</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            {% else %}
+                <!-- No Messages -->
+                <div class="text-center py-5">
+                    <i class="fas fa-envelope fa-4x text-muted mb-4"></i>
+                    <h3 class="text-muted">لا توجد رسائل</h3>
+                    <p class="text-muted mb-4">لم يتم استلام أي رسائل من المستخدمين بعد.</p>
+                    
+                    <div class="bg-light p-4 rounded">
+                        <h5 class="mb-3">شجع المستخدمين على التواصل:</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success"></i> شارك رابط صفحة "اتصل بنا"</li>
+                            <li class="mb-2"><i class="fas fa-check text-success"></i> أضف المزيد من النباتات لجذب الزوار</li>
+                            <li class="mb-2"><i class="fas fa-check text-success"></i> تفاعل مع التعليقات على النباتات</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'contact:contact_us' %}" class="btn btn-success btn-lg">
+                            <i class="fas fa-envelope"></i> صفحة اتصل بنا
+                        </a>
+                        <a href="{% url 'plants:add_plant' %}" class="btn btn-outline-success btn-lg">
+                            <i class="fas fa-plus"></i> إضافة نبات
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+}
+
+.border-warning {
+    border-width: 2px !important;
+}
+</style>
+{% endblock %}

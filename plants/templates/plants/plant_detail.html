@@ -1,0 +1,162 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}{{ plant.name }} - Planteer{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Back Button & Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{% url 'plants:all_plants' %}" class="btn btn-outline-secondary mb-2">
+                        <i class="fas fa-arrow-left"></i> Back to Plants
+                    </a>
+                    <h1 class="page-title mb-0">Plant Details</h1>
+                </div>
+                <div>
+                    <a href="{% url 'plants:update_plant' plant.id %}" class="btn btn-warning me-2">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{% url 'plants:delete_plant' plant.id %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Main Plant Image -->
+        <div class="col-lg-6 mb-4">
+            <div class="plant-card">
+                {% if plant.image %}
+                    <img src="/static/images/{{ plant.image }}" class="plant-image" alt="{{ plant.name }}" style="height: 450px;">
+                {% else %}
+                    <div class="plant-image d-flex align-items-center justify-content-center" style="height: 450px;">
+                        <i class="fas fa-leaf fa-5x text-success"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Plant Information -->
+        <div class="col-lg-6">
+            <div class="plant-card h-100">
+                <div class="plant-info">
+                    <h2 class="plant-title" style="font-size: 2rem; margin-bottom: 20px;">{{ plant.name }}</h2>
+                    
+                    <div class="mb-4">
+                        <span class="plant-category">{{ plant.get_category_display }}</span>
+                        {% if plant.is_edible %}
+                            <span class="badge bg-warning text-dark ms-2">Edible Plant</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-success mb-2">About this Plant:</h5>
+                        <p class="plant-description">{{ plant.about }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-success mb-2">Uses:</h5>
+                        <p class="plant-description">{{ plant.used_for }}</p>
+                    </div>
+                    
+                    <div class="small text-muted">
+                        <i class="fas fa-calendar"></i> Added on {{ plant.created_at|date:"F d, Y" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Related Plants Section -->
+    {% if related_plants %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="page-title mb-4">Related Plants</h3>
+            <div class="row g-4">
+                {% for related_plant in related_plants %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="plant-card">
+                        <a href="{% url 'plants:plant_detail' related_plant.id %}" class="text-decoration-none">
+                            {% if related_plant.image %}
+                                <img src="/static/images/{{ related_plant.image }}" class="plant-image" alt="{{ related_plant.name }}">
+                            {% else %}
+                                <div class="plant-image d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-leaf fa-3x text-success"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="plant-info">
+                                <h6 class="plant-title">{{ related_plant.name }}</h6>
+                                <p class="plant-description">{{ related_plant.about|truncatechars:60 }}</p>
+                                <span class="plant-category">{{ related_plant.get_category_display }}</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Comments Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="page-title mb-4">Comments ({{ comments.count }})</h3>
+            
+            <!-- Add Comment Form -->
+            <div class="plant-card mb-4">
+                <div class="plant-info">
+                    <h5 class="fw-bold mb-3">Add Your Comment</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Full Name</label>
+                                {{ comment_form.full_name }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Your Comment</label>
+                                {{ comment_form.content }}
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-paper-plane"></i> Post Comment
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Comments List -->
+            {% if comments %}
+                {% for comment in comments %}
+                <div class="plant-card mb-3">
+                    <div class="plant-info">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0 fw-bold" style="color: #2d5016;">
+                                <i class="fas fa-user-circle"></i> {{ comment.full_name }}
+                            </h6>
+                            <small class="text-muted">{{ comment.created_at|date:"M d, Y - H:i" }}</small>
+                        </div>
+                        <p class="mb-0 plant-description">{{ comment.content }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-comment fa-4x text-muted mb-3"></i>
+                    <h5 class="text-muted">No comments yet</h5>
+                    <p class="text-muted">Be the first to share your thoughts about this plant!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}حذف النبات - Planteer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> تأكيد الحذف
+                    </h3>
+                </div>
+                <div class="card-body text-center">
+                    {% if plant.image %}
+                        <img src="{{ plant.image.url }}" alt="{{ plant.name }}" class="img-thumbnail mb-3" style="max-height: 150px;">
+                    {% endif %}
+                    
+                    <h4 class="text-danger mb-3">{{ plant.name }}</h4>
+                    <span class="category-badge mb-3 d-inline-block">{{ plant.get_category_display }}</span>
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>تحذير!</strong> هذا الإجراء لا يمكن التراجع عنه.
+                    </div>
+                    
+                    <p class="text-muted mb-4">
+                        هل أنت متأكد من رغبتك في حذف هذا النبات؟<br>
+                        سيتم حذف جميع المعلومات والتعليقات المرتبطة به نهائياً.
+                    </p>
+                    
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <strong>معلومات النبات:</strong>
+                        </div>
+                        <div class="col-6 text-start">
+                            <small class="text-muted">الوصف:</small>
+                        </div>
+                        <div class="col-6 text-start">
+                            <small>{{ plant.about|truncatewords:10 }}</small>
+                        </div>
+                        <div class="col-6 text-start">
+                            <small class="text-muted">تاريخ الإضافة:</small>
+                        </div>
+                        <div class="col-6 text-start">
+                            <small>{{ plant.created_at|date:"d M Y" }}</small>
+                        </div>
+                        <div class="col-6 text-start">
+                            <small class="text-muted">عدد التعليقات:</small>
+                        </div>
+                        <div class="col-6 text-start">
+                            <small>{{ plant.comments.count }} تعليق</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <form method="POST" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger me-2">
+                            <i class="fas fa-trash"></i> نعم، احذف النبات
+                        </button>
+                    </form>
+                    <a href="{% url 'plants:plant_detail' plant.id %}" class="btn btn-secondary me-2">
+                        <i class="fas fa-times"></i> إلغاء
+                    </a>
+                    <a href="{% url 'plants:all_plants' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-list"></i> العودة للقائمة
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Alternative Actions -->
+            <div class="card mt-4 border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb"></i> بدائل أخرى</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">بدلاً من حذف النبات، يمكنك:</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'plants:update_plant' plant.id %}" class="btn btn-outline-warning">
+                            <i class="fas fa-edit"></i> تعديل معلومات النبات
+                        </a>
+                        <a href="{% url 'plants:plant_detail' plant.id %}" class="btn btn-outline-primary">
+                            <i class="fas fa-eye"></i> مراجعة تفاصيل النبات
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.border-danger {
+    border-width: 2px !important;
+}
+
+.border-info {
+    border-width: 2px !important;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Planteer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-plus"></i> {{ title }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <!-- Plant Name -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">اسم النبات *</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger small">{{ form.name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Category and Edible -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">الفئة *</label>
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                    <div class="text-danger small">{{ form.category.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">صالح للأكل</label>
+                                <div class="form-check mt-2">
+                                    {{ form.is_edible }}
+                                    <label class="form-check-label" for="{{ form.is_edible.id_for_label }}">
+                                        نعم، هذا النبات صالح للأكل
+                                    </label>
+                                </div>
+                                {% if form.is_edible.errors %}
+                                    <div class="text-danger small">{{ form.is_edible.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Plant Image -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">صورة النبات</label>
+                                {{ form.image }}
+                                <div class="form-text">يفضل رفع صورة واضحة للنبات بجودة عالية</div>
+                                {% if form.image.errors %}
+                                    <div class="text-danger small">{{ form.image.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- About -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">وصف النبات *</label>
+                                {{ form.about }}
+                                <div class="form-text">اكتب وصفاً مفصلاً عن النبات وخصائصه</div>
+                                {% if form.about.errors %}
+                                    <div class="text-danger small">{{ form.about.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Used For -->
+                            <div class="col-12 mb-4">
+                                <label class="form-label fw-bold">الاستخدامات والفوائد *</label>
+                                {{ form.used_for }}
+                                <div class="form-text">اذكر الاستخدامات المختلفة للنبات والفوائد التي يقدمها</div>
+                                {% if form.used_for.errors %}
+                                    <div class="text-danger small">{{ form.used_for.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'plants:all_plants' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> إلغاء
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> حفظ النبات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Tips Card -->
+            <div class="card mt-4 border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb"></i> نصائح لإضافة نبات</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>تأكد من كتابة اسم النبات بشكل صحيح ودقيق</li>
+                        <li>اختر الفئة المناسبة للنبات</li>
+                        <li>اكتب وصفاً شاملاً يساعد الآخرين على التعرف على النبات</li>
+                        <li>اذكر جميع الاستخدامات والفوائد المعروفة للنبات</li>
+                        <li>ارفع صورة واضحة وعالية الجودة</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+</style>
+{% endblock %}

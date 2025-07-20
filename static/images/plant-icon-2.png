@@ -1,0 +1,7 @@
+<!-- Placeholder for plant-icon-2.png -->
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="40" cy="40" r="40" fill="#2d5016"/>
+<circle cx="40" cy="30" r="8" fill="white"/>
+<rect x="36" y="38" width="8" height="20" fill="white"/>
+<ellipse cx="35" cy="45" rx="10" ry="3" fill="white" opacity="0.8"/>
+</svg>

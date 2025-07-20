@@ -1,0 +1,141 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Planteer - Plant Database For Plants Lovers{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center py-5" style="background: linear-gradient(135deg, #f8f9fa, #e8f5e8); border-radius: 20px;">
+                <!-- Plant Icons -->
+                <div class="d-flex justify-content-center align-items-center mb-4">
+                    <div class="me-3">
+                        <img src="{% static 'images/plant-icon-1.png' %}" alt="Plant" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #2d5016;">
+                    </div>
+                    <div class="ms-3">
+                        <img src="{% static 'images/plant-icon-2.png' %}" alt="Plant" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #2d5016;">
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <h1 class="display-3 fw-bold mb-3" style="color: #2d5016;">Planteer</h1>
+                <h2 class="h4 mb-4" style="color: #6b7280;">Plant Database For Plant Lovers</h2>
+                
+                <!-- Search Box -->
+                <div class="search-container mx-auto mb-4">
+                    <form method="GET" action="{% url 'plants:search_plants' %}" class="d-flex">
+                        <input type="text" name="query" class="search-input" placeholder="Search for plants, herbs, flowers..." value="{{ request.GET.query }}">
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Plant Sample Images -->
+                <div class="row g-3 justify-content-center" style="max-width: 400px; margin: 0 auto;">
+                    <div class="col-6">
+                        <img src="{% static 'images/plant-sample-1.png' %}" alt="Plant Sample" class="img-fluid" style="border-radius: 15px; height: 120px; width: 100%; object-fit: cover; border: 2px solid #e9ecef;">
+                    </div>
+                    <div class="col-6">
+                        <img src="{% static 'images/plant-sample-2.png' %}" alt="Plant Sample" class="img-fluid" style="border-radius: 15px; height: 120px; width: 100%; object-fit: cover; border: 2px solid #e9ecef;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Plants Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="page-title">Featured Plants</h3>
+                <a href="{% url 'plants:all_plants' %}" class="btn btn-outline-success">
+                    View All Plants <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            
+            {% if featured_plants %}
+            <div class="row g-4">
+                {% for plant in featured_plants|slice:":6" %}
+                <div class="col-xl-4 col-lg-6">
+                    <div class="plant-card h-100">
+                        <a href="{% url 'plants:plant_detail' plant.id %}" class="text-decoration-none">
+                            {% if plant.image %}
+                                <img src="{{ plant.image.url }}" class="plant-image" alt="{{ plant.name }}">
+                            {% else %}
+                                <div class="plant-image d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-leaf fa-4x text-success"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="plant-info">
+                                <h6 class="plant-title">{{ plant.name }}</h6>
+                                <p class="plant-description">{{ plant.about|truncatechars:100 }}</p>
+                                <span class="plant-category">{{ plant.get_category_display }}</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-seedling fa-5x text-muted mb-4"></i>
+                <h4 class="text-muted mb-3">No Plants Yet</h4>
+                <p class="text-muted mb-4">Be the first to add plants to our database!</p>
+                <a href="{% url 'plants:add_plant' %}" class="btn btn-success btn-lg">
+                    <i class="fas fa-plus"></i> Add First Plant
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="row">
+        <div class="col-12">
+            <h3 class="page-title mb-4">Quick Actions</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="plant-card text-center">
+                        <div class="plant-info">
+                            <i class="fas fa-search fa-3x text-success mb-3"></i>
+                            <h5 class="fw-bold mb-2">Search Plants</h5>
+                            <p class="plant-description">Find plants by name, category, or use advanced filters</p>
+                            <a href="{% url 'plants:search_plants' %}" class="btn btn-success">
+                                <i class="fas fa-search"></i> Start Searching
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="plant-card text-center">
+                        <div class="plant-info">
+                            <i class="fas fa-plus fa-3x text-success mb-3"></i>
+                            <h5 class="fw-bold mb-2">Add Plant</h5>
+                            <p class="plant-description">Share your knowledge by adding new plants to our database</p>
+                            <a href="{% url 'plants:add_plant' %}" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Add Plant
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="plant-card text-center">
+                        <div class="plant-info">
+                            <i class="fas fa-envelope fa-3x text-success mb-3"></i>
+                            <h5 class="fw-bold mb-2">Contact Us</h5>
+                            <p class="plant-description">Have questions or suggestions? We'd love to hear from you</p>
+                            <a href="{% url 'contact:contact_us' %}" class="btn btn-success">
+                                <i class="fas fa-envelope"></i> Get in Touch
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

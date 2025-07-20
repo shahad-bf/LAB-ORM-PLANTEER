@@ -1,0 +1,159 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Planteer - Plant Database For Plants Lovers{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="hero-section position-relative" style="background: #ffffff; border-radius: 15px; overflow: hidden; min-height: 500px; border: 1px solid #e5e7eb;">
+                
+                <!-- Background Plant Image - Full Background -->
+                <div class="background-plants" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+                    <img src="{% static 'images/background_plant.jpg' %}" alt="Plants Background" 
+                         style="width: 100%; height: 100%; object-fit: cover; opacity: 0.25; border-radius: 15px;">
+                </div>
+                
+                <!-- Overlay for better text readability -->
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.4); z-index: 2; border-radius: 15px;"></div>
+
+                <!-- Main Content -->
+                <div class="row h-100 align-items-center justify-content-center" style="position: relative; z-index: 10; min-height: 500px;">
+                    <div class="col-lg-10 col-md-12">
+                        <div class="text-center">
+                            <!-- Title with enhanced styling -->
+                            <h1 class="display-1 fw-bold mb-3" style="color: #000000; font-family: 'Arial', sans-serif; font-size: 4rem; text-shadow: 0 2px 4px rgba(255,255,255,0.8);">Planteer</h1>
+                            <h2 class="h4 mb-4" style="color: #374151; font-weight: 500; text-shadow: 0 1px 2px rgba(255,255,255,0.8);">Plant Database For Plants Lovers</h2>
+                    
+                            <!-- Enhanced Search Box - Bigger and Longer -->
+                            <div class="search-container mb-4 d-flex justify-content-center">
+                                <form method="GET" action="{% url 'plants:search_plants' %}" class="d-flex">
+                                    <div class="input-group" style="max-width: 600px; width: 100%;">
+                                        <input type="text" name="query" class="form-control" placeholder="Search For Plant..." value="{{ request.GET.query }}" style="border-radius: 30px 0 0 30px; border: 2px solid #e5e7eb; font-size: 16px; padding: 15px 20px; background: rgba(255,255,255,0.9);">
+                                        <button type="submit" class="btn btn-dark" style="border-radius: 0 30px 30px 0; background-color: #000; border: 2px solid #000; padding: 15px 30px; font-weight: 600; font-size: 16px;">
+                                            Search
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add CSS for Hero Section -->
+    <style>
+        .hero-section {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .background-plants img {
+            filter: brightness(1.1) contrast(0.9);
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section .col-lg-10 {
+                text-align: center !important;
+            }
+            
+            .background-plants img {
+                opacity: 0.15 !important;
+            }
+            
+            .input-group {
+                max-width: 350px !important;
+            }
+        }
+    </style>
+
+    <!-- Plants Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="fw-bold mb-1" style="color: #000000;">Featured Plants</h3>
+                    <p class="text-muted mb-0">Discover our amazing collection</p>
+                </div>
+                <a href="{% url 'plants:all_plants' %}" class="text-decoration-none" style="color: #6b7280;">
+                    View All Plants >>
+                </a>
+            </div>
+            
+            {% if featured_plants %}
+            <div class="row g-4">
+                {% for plant in featured_plants %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="plant-card">
+                        <a href="{% url 'plants:plant_detail' plant.id %}" class="text-decoration-none">
+                            {% if plant.image %}
+                                <img src="/static/images/{{ plant.image }}" class="plant-image" alt="{{ plant.name }}">
+                            {% else %}
+                                <div class="plant-image d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-leaf fa-4x text-success"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="plant-info">
+                                <h5 class="plant-title">{{ plant.name }}</h5>
+                                <p class="plant-description">{{ plant.about|truncatechars:80 }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="plant-category">
+                                        <i class="fas fa-{% if plant.category == 'herb' %}leaf{% elif plant.category == 'vegetable' %}carrot{% elif plant.category == 'fruit' %}apple-alt{% else %}seedling{% endif %} me-1"></i>
+                                        {{ plant.get_category_display }}
+                                    </span>
+                                    {% if plant.is_edible %}
+                                        <span class="badge bg-success">Edible</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-seedling fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">No plants available yet</h5>
+                <p class="text-muted">Add some plants to get started!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="p-4 rounded-3" style="background-color: #f8f9fa;">
+                        <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                        <h4 class="fw-bold text-dark">{{ total_plants }}</h4>
+                        <p class="text-muted mb-0">Total Plants</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-3" style="background-color: #f8f9fa;">
+                        <i class="fas fa-seedling fa-3x text-success mb-3"></i>
+                        <h4 class="fw-bold text-dark">100%</h4>
+                        <p class="text-muted mb-0">Organic</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-3" style="background-color: #f8f9fa;">
+                        <i class="fas fa-heart fa-3x text-success mb-3"></i>
+                        <h4 class="fw-bold text-dark">Easy</h4>
+                        <p class="text-muted mb-0">To Grow</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
